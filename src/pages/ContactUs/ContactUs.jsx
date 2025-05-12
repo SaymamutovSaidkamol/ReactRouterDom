@@ -7,6 +7,7 @@ const ContactUs = () => {
   const [descValue, setDescValue] = useState("");
   const [priceValue, setPriceValue] = useState("");
   const [CategoryValue, setCategoryValue] = useState("");
+  const [ImageValue, setImageValue] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -14,17 +15,17 @@ const ContactUs = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(nameValue);
-    console.log(descValue);
-    console.log(priceValue);
-    console.log(CategoryValue);
+    // console.log(nameValue);
+    // console.log(descValue);
+    // console.log(priceValue);
+    console.log(ImageValue);
 
     const newProd = {
       name: nameValue,
       price: parseFloat(priceValue),
       description: descValue,
       categoryId: parseInt(CategoryValue),
-      img: "https://stimg.cardekho.com/images/carexteriorimages/630x420/BMW/M5-2025/11821/1719462197562/front-left-side-47.jpg?impolicy=resize&imwidth=480",
+      img: ImageValue,
     };
 
     if (update) {
@@ -37,9 +38,10 @@ const ContactUs = () => {
           setDescValue("");
           setPriceValue("");
           setCategoryValue("");
+          setImageValue("");
           toast.success("Product Updated successfully");
           setReload((p) => !p);
-          setUpdate(null)
+          setUpdate(null);
         })
         .catch(() => {
           toast.error("Error");
@@ -109,6 +111,7 @@ const ContactUs = () => {
     setDescValue(product.description);
     setPriceValue(product.price);
     setCategoryValue(product.categoryId);
+    setImageValue(product.img);
   };
 
   return (
@@ -211,7 +214,7 @@ const ContactUs = () => {
             }}
           />
           <select
-            className="w-full h-10 rounded-[5px] bg-[#eee] focus:outline-none"
+            className="w-full h-10 rounded-[5px] bg-[#eee] focus:outline-none  px-4"
             value={CategoryValue}
             onChange={(e) => setCategoryValue(e.target.value)}
           >
@@ -222,7 +225,24 @@ const ContactUs = () => {
               </option>
             ))}
           </select>
-          <button className="h-[40px] mt-5 w-[100px] rounded-[5px] bg-[#dad4d4] cursor-pointer hover:bg-[#eee]" disabled={loading}>
+          <input
+            type="file"
+            className="w-full h-10 py-2 px-4 rounded-[5px] bg-[#eee] focus:outline-none"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                setImageValue(reader.result); 
+              };
+              if (file) {
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+          <button
+            className="h-[40px] mt-5 w-[100px] rounded-[5px] bg-[#dad4d4] cursor-pointer hover:bg-[#eee]"
+            disabled={loading}
+          >
             {loading ? "Loading..." : update ? "Update" : "Submit"}
           </button>
         </form>
